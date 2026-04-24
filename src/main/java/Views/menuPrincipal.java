@@ -2,7 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.laboratorio2_jambrocio;
+package Views;
+
+import Controller.Sesion;
+import model.rol;
+import javax.swing.JOptionPane;
+import Views.login;
+import Views.mantenimientoUsuarios;
+import Views.reinicioClave;
 
 /**
  *
@@ -18,7 +25,11 @@ public class menuPrincipal extends javax.swing.JFrame {
     public menuPrincipal() {
         initComponents();
         this.setTitle("Menu Principal");
-        
+        this.setLocationRelativeTo(null);
+
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+            jPanel1.setEnabled(false);
+        }
     }
 
     /**
@@ -73,6 +84,7 @@ public class menuPrincipal extends javax.swing.JFrame {
 
         jButton1.setText("jButton1");
         jButton1.setPreferredSize(new java.awt.Dimension(0, 0));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -125,6 +137,7 @@ public class menuPrincipal extends javax.swing.JFrame {
 
         jButton2.setText("jButton2");
         jButton2.setPreferredSize(new java.awt.Dimension(0, 0));
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -200,15 +213,47 @@ public class menuPrincipal extends javax.swing.JFrame {
                 .addContainerGap(74, Short.MAX_VALUE))
         );
 
-        jMenu3.setText("ARCHIVO");
+        jMenu3.setText("MANTENIMIENTO USUARIOS");
+        jMenu3.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenu3MenuSelected(evt);
+            }
+        });
         jMenuBar2.add(jMenu3);
 
-        jMenu4.setText("EDITAR");
+        jMenu4.setText("REINICIO DE CLAVE");
+        jMenu4.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenu4MenuSelected(evt);
+            }
+        });
         jMenuBar2.add(jMenu4);
 
         jMenu1.setForeground(new java.awt.Color(232, 64, 90));
         jMenu1.setText("CERRAR SESIÓN");
         jMenu1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jMenu1.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                jMenu1MenuSelected(evt);
+            }
+        });
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
         jMenuBar2.add(jMenu1);
 
         setJMenuBar(jMenuBar2);
@@ -226,24 +271,65 @@ public class menuPrincipal extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-        // TODO add your handling code here:
-        mantenimientoUsuarios mantenimiento = new mantenimientoUsuarios();
-        mantenimiento.setLocationRelativeTo(null);
-        mantenimiento.setVisible(true);
         
+    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+        new mantenimientoUsuarios().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jPanel3MouseClicked
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
-        // TODO add your handling code here:
-         reinicioClave reinicio = new reinicioClave();
-         reinicio.setLocationRelativeTo(null);
-         reinicio.setVisible(true);
-         
-         this.dispose();
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+            JOptionPane.showMessageDialog(this, "Solo ADMIN puede acceder");
+            return;
+        }
+
+        new reinicioClave().setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jPanel1MouseClicked
+
+    private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
+
+    }//GEN-LAST:event_jMenu1MouseClicked
+
+    private void jMenu1MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu1MenuSelected
+         Sesion.usuarioActual = null;
+
+        login login = new login();
+        login.setLocationRelativeTo(null);
+        login.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_jMenu1MenuSelected
+
+    private void jMenu4MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu4MenuSelected
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+            JOptionPane.showMessageDialog(this, "Solo ADMIN puede acceder");
+            return;
+        }
+
+        new reinicioClave().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenu4MenuSelected
+
+    private void jMenu3MenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_jMenu3MenuSelected
+        new mantenimientoUsuarios().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenu3MenuSelected
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new mantenimientoUsuarios().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+            JOptionPane.showMessageDialog(this, "Solo ADMIN puede acceder");
+            return;
+        }
+
+        new reinicioClave().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -2,7 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.laboratorio2_jambrocio;
+package Views;
+
+import Datos.registro;
+import model.usuario;
+import model.rol;
+import Controller.Sesion;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,54 +29,101 @@ public class mantenimientoUsuarios extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Mantenimiendo de Usuarios");
         configurarTabla();
+
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+            cmbRol.setEnabled(false);
+        }
     }
     
-    // Configura el modelo de la tabla y el listener de clic
     private void configurarTabla() {
-        modeloTabla = new javax.swing.table.DefaultTableModel(
-        new Object[]{"USUARIO", "NOMBRE", "CORREO", "ESTADO"}, 0) {
-        @Override
+    modeloTabla = new DefaultTableModel(
+        new Object[]{"USUARIO", "NOMBRE", "CORREO", "ESTADO", "ROL", "PASSWORD"}, 0
+    ) {
         public boolean isCellEditable(int row, int column) {
             return false;
         }
     };
-    tblUsuarios.setModel(modeloTabla);
-    cargarTabla(); // Carga los datos existentes al abrir
 
-    tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            int fila = tblUsuarios.getSelectedRow();
-            if (fila >= 0) {
-                String[] u = gestorUsuarios.getLista().get(fila);
-                txtUsuario.setText(u[0]);
-                txtNombre.setText(u[1]);
-                txtCorreo.setText(u[2]);
-                cmbEstado.setSelectedItem(u[3]);
-            }
-        }
-    });
-    }
-    
-    // Carga la lista global en la tabla
-private void cargarTabla() {
-    modeloTabla.setRowCount(0);
-    for (String[] u : gestorUsuarios.getLista()) {
-        modeloTabla.addRow(new Object[]{u[0], u[1], u[2], u[3]});
-    }
+    tblUsuarios.setModel(modeloTabla);
+    cargarTabla();
 }
+
+    private void cargarTabla() {
+        modeloTabla.setRowCount(0);
+
+        for (usuario u : registro.usuarios) {
+            modeloTabla.addRow(new Object[]{
+                u.getUsername(),
+                u.getNombre(),
+                u.getCorreo(),
+                u.isActivo() ? "ACTIVO" : "INACTIVO",
+                u.getRol(),
+                u.getPassword()
+            });
+        }
+    }
     
-    // Limpia todos los campos del formulario
+    private boolean validarCorreo(String correo) {
+
+        if (!correo.contains("@")) {
+            JOptionPane.showMessageDialog(this, "El correo debe contener '@'");
+            return false;
+        }
+
+        if (!correo.contains(".")) {
+            JOptionPane.showMessageDialog(this, "El correo debe contener dominio (.com, etc)");
+            return false;
+        }
+
+        return true;
+    }
+    
+    private void cargarDatosDesdeTabla() {
+        int fila = tblUsuarios.getSelectedRow();
+
+        if (fila >= 0) {
+            txtUsuario.setText(tblUsuarios.getValueAt(fila, 0).toString());
+            txtNombre.setText(tblUsuarios.getValueAt(fila, 1).toString());
+            txtCorreo.setText(tblUsuarios.getValueAt(fila, 2).toString());
+            txtPassword.setText(tblUsuarios.getValueAt(fila, 5).toString());
+
+            cmbEstado.setSelectedItem(tblUsuarios.getValueAt(fila, 3).toString());
+            cmbRol.setSelectedItem(tblUsuarios.getValueAt(fila, 4).toString());
+        }
+    }
+    
+    private boolean validarPassword(String pass) {
+
+        if (pass.length() < 13) {
+            JOptionPane.showMessageDialog(this, "La contraseña debe tener mínimo 13 caracteres");
+            return false;
+        }
+
+        if (!pass.matches(".*[A-Z].*")) {
+            JOptionPane.showMessageDialog(this, "Debe contener al menos una mayúscula");
+            return false;
+        }
+
+        if (!pass.matches(".*[^a-zA-Z0-9].*")) {
+            JOptionPane.showMessageDialog(this, "Debe contener al menos un símbolo especial");
+            return false;
+        }
+
+        return true;
+    }
+ 
     private void limpiarFormulario() {
         txtUsuario.setText("");
         txtNombre.setText("");
         txtCorreo.setText("");
         txtPassword.setText("");
-        cmbEstado.setSelectedIndex(0);
+
+        cmbEstado.setSelectedItem("ACTIVO");
+        cmbRol.setSelectedItem("USER");
+
         tblUsuarios.clearSelection();
     }
  
-    // Valida que ningún campo esté vacío
     private boolean validarCampos() {
         if (txtUsuario.getText().trim().isEmpty() ||
             txtNombre.getText().trim().isEmpty() ||
@@ -83,7 +137,6 @@ private void cargarTabla() {
         return true;
     }
  
-    // Verifica si el usuario ya existe en la tabla
     private boolean usuarioExiste(String usuario) {
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             if (modeloTabla.getValueAt(i, 0).toString().equalsIgnoreCase(usuario)) {
@@ -122,6 +175,8 @@ private void cargarTabla() {
         jPanel2 = new javax.swing.JPanel();
         lblTitulo = new javax.swing.JLabel();
         btnVolver = new javax.swing.JButton();
+        lblRol = new javax.swing.JLabel();
+        cmbRol = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(45, 45, 107));
@@ -169,9 +224,14 @@ private void cargarTabla() {
 
             },
             new String [] {
-                "USUARIO", "NOMBRE", "CORREO", "ESTADO"
+                "USUARIO", "NOMBRE", "CORREO", "ESTADO", "ROL", "PASSWORD"
             }
         ));
+        tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUsuariosMouseClicked(evt);
+            }
+        });
         scrollTable.setViewportView(tblUsuarios);
 
         lblLista.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -237,6 +297,14 @@ private void cargarTabla() {
         btnVolver.setPreferredSize(new java.awt.Dimension(140, 28));
         btnVolver.addActionListener(this::btnVolverActionPerformed);
 
+        lblRol.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblRol.setForeground(new java.awt.Color(192, 192, 224));
+        lblRol.setText("Roles: ");
+
+        cmbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "USUER", "ADMIN" }));
+        cmbRol.setPreferredSize(new java.awt.Dimension(250, 25));
+        cmbRol.addActionListener(this::cmbRolActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -257,11 +325,14 @@ private void cargarTabla() {
                                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cmbEstado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(57, 57, 57)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblRol, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(lblLista, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -297,9 +368,13 @@ private void cargarTabla() {
                     .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(lblEstado)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEstado)
+                    .addComponent(lblRol))
                 .addGap(18, 18, 18)
-                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -336,55 +411,92 @@ private void cargarTabla() {
     }//GEN-LAST:event_cmbEstadoActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        if (!validarCampos()) return;
- 
-        if (gestorUsuarios.existe(txtUsuario.getText().trim())) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "El usuario '" + txtUsuario.getText().trim() + "' ya existe.",
-                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        String user = txtUsuario.getText().trim();
+        String pass = new String(txtPassword.getPassword());
+        String correo = txtCorreo.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String estado = cmbEstado.getSelectedItem().toString();
+
+        if (user.isEmpty() || pass.isEmpty() || correo.isEmpty() || nombre.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Campos vacíos");
             return;
         }
- 
-        // Guarda en memoria global
-        gestorUsuarios.agregar(
-            txtUsuario.getText().trim(),
-            txtNombre.getText().trim(),
-            txtCorreo.getText().trim(),
-            cmbEstado.getSelectedItem().toString()
-        );
- 
-        cargarTabla();
-        limpiarFormulario();
-        javax.swing.JOptionPane.showMessageDialog(this,
-            "Usuario agregado correctamente.",
-            "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        if (!validarCorreo(correo)) return;
+        if (!validarPassword(pass)) return;
+
+        if (estado.equals("INACTIVO")) {
+            JOptionPane.showMessageDialog(this, "No se puede crear un usuario INACTIVO");
+            return;
+        }
+
+        for (usuario u : registro.usuarios) {
+
+                if (u.getCorreo().equalsIgnoreCase(correo)) {
+
+
+                    if (u.getUsername().equalsIgnoreCase(user)) {
+
+                        JOptionPane.showMessageDialog(this, "El usuario ya existe, se actualizarán los datos");
+
+                        u.setNombre(nombre);
+                        u.setPassword(pass);
+                        u.setCorreo(correo);
+
+                        cargarTabla();
+                        limpiarFormulario();
+                        return;
+                    }
+
+                    JOptionPane.showMessageDialog(this, "El correo ya está registrado en otro usuario");
+                    return;
+                }
+            }
+
+            for (usuario u : registro.usuarios) {
+                if (u.getUsername().equalsIgnoreCase(user)) {
+                    JOptionPane.showMessageDialog(this, "El usuario ya existe, usa MODIFICAR");
+                    return;
+                }
+            }
+
+            rol rolNuevo;
+
+            if (Sesion.usuarioActual.getRol() == rol.ADMIN) {
+                rolNuevo = cmbRol.getSelectedItem().toString().equals("ADMIN") ? rol.ADMIN : rol.USER;
+            } else {
+                rolNuevo = rol.USER;
+            }
+
+            registro.usuarios.add(
+                new usuario(user, pass, rolNuevo, true, nombre, correo)
+            );
+
+            cargarTabla();
+            limpiarFormulario();
+
+            JOptionPane.showMessageDialog(this, "Usuario agregado correctamente");
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnIncativarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncativarActionPerformed
-         int fila = tblUsuarios.getSelectedRow();
-        if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Selecciona un usuario de la tabla para inactivar.",
-                "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
- 
-        String nombreUsuario = modeloTabla.getValueAt(fila, 0).toString();
- 
-        int confirmar = javax.swing.JOptionPane.showConfirmDialog(this,
-            "¿Deseas inactivar al usuario '" + nombreUsuario + "'?",
-            "Confirmar", javax.swing.JOptionPane.YES_NO_OPTION);
- 
-        if (confirmar == javax.swing.JOptionPane.YES_OPTION) {
-            // CORRECCIÓN: actualiza gestorUsuarios (memoria global)
-            gestorUsuarios.inactivar(fila);
-            cargarTabla();
-            tblUsuarios.clearSelection();
-            limpiarFormulario();
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Usuario inactivado correctamente.",
-                "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-        }
+        int fila = tblUsuarios.getSelectedRow();
+
+    if (fila < 0) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario");
+        return;
+    }
+
+    if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+        JOptionPane.showMessageDialog(this, "Solo ADMIN puede inactivar");
+        return;
+    }
+
+    registro.usuarios.get(fila).setActivo(false);
+
+    cargarTabla();
+    limpiarFormulario();
+
+    JOptionPane.showMessageDialog(this, "Usuario inactivado");
     }//GEN-LAST:event_btnIncativarActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -401,30 +513,76 @@ private void cargarTabla() {
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
       int fila = tblUsuarios.getSelectedRow();
+
         if (fila < 0) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                "Selecciona un usuario de la tabla para modificar.",
-                "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario");
             return;
         }
- 
-        if (!validarCampos()) return;
- 
-        // CORRECCIÓN: actualiza gestorUsuarios (memoria global), no solo la tabla visual
-        gestorUsuarios.modificar(
-            fila,
-            txtUsuario.getText().trim(),
-            txtNombre.getText().trim(),
-            txtCorreo.getText().trim(),
-            cmbEstado.getSelectedItem().toString()
-        );
- 
+
+        usuario u = registro.usuarios.get(fila);
+
+        if (Sesion.usuarioActual.getRol() != rol.ADMIN && u.getRol() == rol.ADMIN) {
+            JOptionPane.showMessageDialog(this, "No puedes modificar usuarios ADMIN");
+            return;
+        }
+
+        String pass = new String(txtPassword.getPassword());
+        String nombre = txtNombre.getText();
+        String correo = txtCorreo.getText();
+
+        if (!validarCorreo(correo)) return;
+        if (!validarPassword(pass)) return;
+
+        u.setPassword(pass);
+        u.setNombre(nombre);
+        u.setCorreo(correo);
+
+        String estadoNuevo = cmbEstado.getSelectedItem().toString();
+        String estadoActual = u.isActivo() ? "ACTIVO" : "INACTIVO";
+
+        if (!estadoNuevo.equals(estadoActual)) {
+
+            if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+                JOptionPane.showMessageDialog(this, "Solo ADMIN puede cambiar el estado");
+
+
+                cmbEstado.setSelectedItem(estadoActual);
+
+            } else {
+                u.setActivo(estadoNuevo.equals("ACTIVO"));
+            }
+        }
+
+        String rolNuevo = cmbRol.getSelectedItem().toString();
+        String rolActual = u.getRol().toString();
+
+        if (!rolNuevo.equals(rolActual)) {
+
+            if (Sesion.usuarioActual.getRol() != rol.ADMIN) {
+                JOptionPane.showMessageDialog(this, "Solo ADMIN puede cambiar roles");
+
+             
+                cmbRol.setSelectedItem(rolActual);
+
+            } else {
+                u.setRol(rolNuevo.equals("ADMIN") ? rol.ADMIN : rol.USER);
+            }
+        }
+
         cargarTabla();
         limpiarFormulario();
-        javax.swing.JOptionPane.showMessageDialog(this,
-            "Usuario modificado correctamente.",
-            "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(this, "Usuario modificado correctamente");
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
+        // TODO add your handling code here:
+        cargarDatosDesdeTabla();
+    }//GEN-LAST:event_tblUsuariosMouseClicked
+
+    private void cmbRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbRolActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbRolActionPerformed
 
     /**
      * @param args the command line arguments
@@ -458,6 +616,7 @@ private void cargarTabla() {
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cmbEstado;
+    private javax.swing.JComboBox<String> cmbRol;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblCorreo;
@@ -465,6 +624,7 @@ private void cargarTabla() {
     private javax.swing.JLabel lblLista;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblRol;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JScrollPane scrollTable;

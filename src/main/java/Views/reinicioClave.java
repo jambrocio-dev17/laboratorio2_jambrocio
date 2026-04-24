@@ -2,7 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.laboratorio2_jambrocio;
+package Views;
+import Datos.registro;
+import Controller.Sesion;
+import model.usuario;
+import model.rol;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +24,10 @@ public class reinicioClave extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Reinicio de Clave");
     }
+    
+    private boolean validarPassword(String pass) {
+        return pass.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{13,}$");
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,65 +39,63 @@ public class reinicioClave extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jPasswordField2 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        lblUsuario = new javax.swing.JLabel();
+        txtUsuario = new javax.swing.JTextField();
+        lblconPass = new javax.swing.JLabel();
+        lblnewPass = new javax.swing.JLabel();
+        txtconPass = new javax.swing.JPasswordField();
+        txtnwePass = new javax.swing.JPasswordField();
+        btnActualizar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        lblTitulo = new javax.swing.JLabel();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(45, 45, 107));
 
         jPanel1.setBackground(new java.awt.Color(62, 62, 112));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(192, 192, 224));
-        jLabel1.setText("Usuario ");
+        lblUsuario.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblUsuario.setForeground(new java.awt.Color(192, 192, 224));
+        lblUsuario.setText("Usuario ");
 
-        jTextField1.setText("jTextField1");
-        jTextField1.setPreferredSize(new java.awt.Dimension(300, 25));
+        txtUsuario.setPreferredSize(new java.awt.Dimension(300, 25));
 
-        jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(192, 192, 224));
-        jLabel2.setText("Confirmar Password:");
+        lblconPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblconPass.setForeground(new java.awt.Color(192, 192, 224));
+        lblconPass.setText("Confirmar Password:");
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(192, 192, 224));
-        jLabel3.setText("Nueva Password:");
+        lblnewPass.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lblnewPass.setForeground(new java.awt.Color(192, 192, 224));
+        lblnewPass.setText("Nueva Password:");
 
-        jPasswordField1.setText("jPasswordField1");
-        jPasswordField1.setPreferredSize(new java.awt.Dimension(300, 25));
+        txtconPass.setPreferredSize(new java.awt.Dimension(300, 25));
 
-        jPasswordField2.setText("jPasswordField1");
-        jPasswordField2.setPreferredSize(new java.awt.Dimension(300, 25));
+        txtnwePass.setPreferredSize(new java.awt.Dimension(300, 25));
 
-        jButton1.setBackground(new java.awt.Color(232, 64, 90));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("ACTUALIZAR");
-        jButton1.setBorderPainted(false);
-        jButton1.setOpaque(true);
-        jButton1.setPreferredSize(new java.awt.Dimension(110, 28));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnActualizar.setBackground(new java.awt.Color(232, 64, 90));
+        btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
+        btnActualizar.setText("ACTUALIZAR");
+        btnActualizar.setBorderPainted(false);
+        btnActualizar.setOpaque(true);
+        btnActualizar.setPreferredSize(new java.awt.Dimension(110, 28));
+        btnActualizar.addActionListener(this::btnActualizarActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(85, 85, 119));
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("CANCELAR");
-        jButton2.setToolTipText("");
-        jButton2.setBorderPainted(false);
-        jButton2.setOpaque(true);
-        jButton2.setPreferredSize(new java.awt.Dimension(110, 28));
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        btnCancelar.setBackground(new java.awt.Color(85, 85, 119));
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("CANCELAR");
+        btnCancelar.setToolTipText("");
+        btnCancelar.setBorderPainted(false);
+        btnCancelar.setOpaque(true);
+        btnCancelar.setPreferredSize(new java.awt.Dimension(110, 28));
+        btnCancelar.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+        btnCancelar.addActionListener(this::btnCancelarActionPerformed);
 
         jPanel2.setBackground(new java.awt.Color(26, 26, 74));
         jPanel2.setPreferredSize(new java.awt.Dimension(300, 70));
@@ -138,11 +145,11 @@ public class reinicioClave extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(26, 26, 74));
 
-        jLabel8.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("REINICIO DE CLAVE");
+        lblTitulo.setBackground(new java.awt.Color(0, 0, 0));
+        lblTitulo.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblTitulo.setForeground(new java.awt.Color(255, 255, 255));
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("REINICIO DE CLAVE");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -150,26 +157,26 @@ public class reinicioClave extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(114, 114, 114)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel8)
+                .addComponent(lblTitulo)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jButton4.setBackground(new java.awt.Color(45, 45, 107));
-        jButton4.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(192, 192, 224));
-        jButton4.setText("← Volver al Menú");
-        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(85, 85, 170)));
-        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton4.setOpaque(true);
-        jButton4.setPreferredSize(new java.awt.Dimension(140, 28));
-        jButton4.addActionListener(this::jButton4ActionPerformed);
+        btnVolver.setBackground(new java.awt.Color(45, 45, 107));
+        btnVolver.setFont(new java.awt.Font("Arial", 0, 11)); // NOI18N
+        btnVolver.setForeground(new java.awt.Color(192, 192, 224));
+        btnVolver.setText("← Volver al Menú");
+        btnVolver.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(85, 85, 170)));
+        btnVolver.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVolver.setOpaque(true);
+        btnVolver.setPreferredSize(new java.awt.Dimension(140, 28));
+        btnVolver.addActionListener(this::btnVolverActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -179,24 +186,24 @@ public class reinicioClave extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(65, 65, 65)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(28, 28, 28)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPasswordField2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtconPass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtnwePass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lblUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblnewPass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblconPass, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(42, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(114, 114, 114))
         );
         jPanel1Layout.setVerticalGroup(
@@ -204,25 +211,25 @@ public class reinicioClave extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addComponent(jLabel1)
+                .addComponent(lblUsuario)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3)
+                .addComponent(lblnewPass)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtnwePass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(lblconPass)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtconPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
@@ -240,17 +247,67 @@ public class reinicioClave extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+    
+    if (Sesion.usuarioActual == null || Sesion.usuarioActual.getRol() != rol.ADMIN) {
+        JOptionPane.showMessageDialog(this, "Solo el ADMIN puede reiniciar contraseñas");
+        return;
+    }
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    String usuario = txtUsuario.getText().trim();
+    String nueva = new String(txtnwePass.getPassword());
+    String confirmar = new String(txtconPass.getPassword());
+
+    if (usuario.isEmpty() || nueva.isEmpty() || confirmar.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios");
+        return;
+    }
+
+    if (!nueva.equals(confirmar)) {
+        JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden");
+        return;
+    }
+
+    if (!validarPassword(nueva)) {
+        JOptionPane.showMessageDialog(this, 
+            "La contraseña debe tener:\n- Mínimo 13 caracteres\n- 1 mayúscula\n- 1 símbolo");
+        return;
+    }
+
+    for (usuario u : registro.usuarios) {
+        if (u.getUsername().equals(usuario)) {
+            u.setPassword(nueva);
+
+            JOptionPane.showMessageDialog(this, "Contraseña actualizada correctamente");
+
+            txtUsuario.setText("");
+            txtnwePass.setText("");
+            txtconPass.setText("");
+
+            return;
+        }
+    }
+
+    JOptionPane.showMessageDialog(this, "Usuario no encontrado");
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         // TODO add your handling code here:
         this.dispose();
         menuPrincipal menu = new menuPrincipal();
         menu.setLocationRelativeTo(null);
         menu.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        JOptionPane.showMessageDialog(this, "Proceso cancelado");
+        
+        menuPrincipal menu = new menuPrincipal();
+        menu.setLocationRelativeTo(null);
+        menu.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -278,22 +335,22 @@ public class reinicioClave extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblUsuario;
+    private javax.swing.JLabel lblconPass;
+    private javax.swing.JLabel lblnewPass;
+    private javax.swing.JTextField txtUsuario;
+    private javax.swing.JPasswordField txtconPass;
+    private javax.swing.JPasswordField txtnwePass;
     // End of variables declaration//GEN-END:variables
 }

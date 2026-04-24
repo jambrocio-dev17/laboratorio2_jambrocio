@@ -2,23 +2,62 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.laboratorio2_jambrocio;
+package Views;
+
+import Views.menuPrincipal;
+import Datos.registro;
+import Controller.Sesion;
+import model.usuario;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Josue Ambrocio
  */
-public class Login extends javax.swing.JFrame {
+public class login extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Login.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
+    
+    int intentos = 0;
 
     /**
      * Creates new form Login
      */
-    public Login() {
+    public login() {
         initComponents();
         this.setTitle("Login");
         
+    }
+    
+    private void validarLogin() {
+        String user = txtUsuario.getText();
+        String pass = new String(txtPassword.getPassword());
+
+        for (usuario u : registro.usuarios) {
+            if (u.getUsername().equals(user) &&
+                u.getPassword().equals(pass) &&
+                u.isActivo()) {
+
+                Sesion.usuarioActual = u;
+
+                JOptionPane.showMessageDialog(this, "Bienvenido " + user);
+
+                menuPrincipal ventanaMenu = new menuPrincipal();
+                ventanaMenu.setLocationRelativeTo(null);
+                ventanaMenu.setVisible(true);
+
+                this.dispose();
+                return;
+            }
+        }
+
+        intentos++;
+        JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+
+        if (intentos >= 3) {
+            JOptionPane.showMessageDialog(this, "Usuario bloqueado por intentos");
+            System.exit(0);
+        }
     }
 
     /**
@@ -167,15 +206,7 @@ public class Login extends javax.swing.JFrame {
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
         // TODO add your handling code here:
-        menuPrincipal ventanaMenu = new menuPrincipal();
-
-        ventanaMenu.setVisible(true);
-        ventanaMenu.setLocationRelativeTo(null);
-        ventanaMenu.setVisible(true);
-        
-        this.dispose();
-           
-        
+        validarLogin();
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -204,7 +235,7 @@ public class Login extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Login().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new login().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

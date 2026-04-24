@@ -4,6 +4,8 @@
 
 package com.mycompany.laboratorio2_jambrocio;
 
+import Views.login;
+
 /**
  *
  * @author Josue Ambrocio
@@ -11,7 +13,7 @@ package com.mycompany.laboratorio2_jambrocio;
 public class Laboratorio2_jambrocio {
 
     public static void main(String[] args) {
-        Login login = new Login();
+        login login = new login();
         
         login.setLocationRelativeTo(null);
         login.setVisible(true);

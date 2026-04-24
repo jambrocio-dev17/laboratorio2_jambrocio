@@ -1,6 +1,9 @@
-C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\gestorUsuarios.java
 C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\Laboratorio2_jambrocio.java
-C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\Login.java
-C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\mantenimientoUsuarios.java
-C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\menuPrincipal.java
-C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\com\mycompany\laboratorio2_jambrocio\reinicioClave.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Controller\Sesion.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Datos\registro.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\model\rol.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\model\usuario.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Views\login.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Views\mantenimientoUsuarios.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Views\menuPrincipal.java
+C:\Users\Josue Ambrocio\OneDrive\Documentos\NetBeansProjects\laboratorio2_jambrocio\src\main\java\Views\reinicioClave.java
